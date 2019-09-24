@@ -1,0 +1,91 @@
+---
+title: "EM algorithm with non-param bootstrap"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+tot_time
+apply(monteboot, 2, function(x) sum(is.na(x)))
+colMeans(monteboot, na.rm = TRUE)
+
+
+
+# Param config 4
+* nrepl=1000
+* bootrepl=1000
+* n=1000
+* px=2
+* a=c(-1.8,-1.5)
+* b=c(-0.02,0.2)
+* No correlations
+
+# Install packages
+```{r install packages, echo = FALSE}
+library(tidyverse)
+library(stargazer)
+library(skimr)
+library(lubridate)
+library(kableExtra)
+library(data.table)
+```
+
+# read data
+```{r}
+df_res <- as_tibble( readRDS("monteboot03092019.rds") )
+df_time <- readRDS("tot_time_monteboot03092019.rds")
+```
+
+# Time
+```{r}
+df_time
+```
+
+# read data
+```{r}
+df_res2 <- as_tibble( readRDS("monteboot_few_boot.rds") )
+df_time2 <- readRDS("tot_time_monteboot_few_boot.rds")
+```
+
+# Time
+```{r}
+df_time2
+```
+
+
+# See results param config 4
+```{r}
+df_res %>%
+  gather(key="variable",value=value) %>% 
+            group_by(variable) %>% 
+            summarise(mean=mean(value,na.rm=T),
+                      sd=sd(value,na.rm=T),
+                      min=min(value, na.rm=T),
+                      max=max(value, na.rm=T) ) %>% 
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped")
+```        
+
+
+# See results with few bootstraps
+```{r}
+df_res2 %>%
+  gather(key="variable",value=value) %>% 
+            group_by(variable) %>% 
+            summarise(mean=mean(value,na.rm=T),
+                      sd=sd(value,na.rm=T),
+                      min=min(value, na.rm=T),
+                      max=max(value, na.rm=T) ) %>% 
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped")
+```        
+
+
+    
+
+
