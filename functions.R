@@ -46,20 +46,50 @@ em_algo=function(y1,x,niter=100,conv=1e-6, onlyparam=FALSE) #y1=caught, x=matrix
   }
 }
 
-# DATA GENERATING FUNCTION
+# DATA GENERATING FUNCTIONS
 
 data_generation = function(n, px, a, b, xsd, xcor) {
   
-  covarmat = xcor * tcrossprod(xsd)
-  
-  x=(mvrnorm(n=n, mu=c(rep(0,px)), Sigma=covarmat))
-  
-  p=matrix(1,n,3)
-  p[,2]=exp(a[1]+x%*%b) 
-  p[,3]=exp(a[2]+x%*%b)
-  p=p/apply(p,1,sum)
-  y=t(apply(p, 1, function(x) rmultinom(1,1,x))) 
-  y1=y[,3] # OBSERVED FRAUDULANT CLAIMS
-  return(list(p=p,y=y,y1=y1, x=x)) #return list of elements 
-  
+  if(px==1) {
+    x=matrix(rnorm(px*n),n,px)
+    x[,1]=xsd[1]*x[,1]
+    
+    p=matrix(1,n,3)
+    p[,2]=exp(a[1]+x%*%b) 
+    p[,3]=exp(a[2]+x%*%b)
+    p=p/apply(p,1,sum)
+    y=t(apply(p, 1, function(x) rmultinom(1,1,x))) 
+    y1=y[,3] # OBSERVED FRAUDULANT CLAIMS
+    return(list(p=p,y=y,y1=y1, x=x)) #return list of elements 
+  } else{
+    
+    covarmat = xcor * tcrossprod(xsd)
+    
+    x=(mvrnorm(n=n, mu=c(rep(0,px)), Sigma=covarmat))
+    
+    p=matrix(1,n,3)
+    p[,2]=exp(a[1]+x%*%b) 
+    p[,3]=exp(a[2]+x%*%b)
+    p=p/apply(p,1,sum)
+    y=t(apply(p, 1, function(x) rmultinom(1,1,x))) 
+    y1=y[,3] # OBSERVED FRAUDULANT CLAIMS
+    return(list(p=p,y=y,y1=y1, x=x)) #return list of elements 
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
