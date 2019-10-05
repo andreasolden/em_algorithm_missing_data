@@ -1,3 +1,6 @@
+#This file contains the functions sourced in the simulations
+#It contains log-likelihood function, EM-algorithm and the data generating procedure
+
 # LOG-LIKELIHOOD
 logl=function(th,x,y)
 {
