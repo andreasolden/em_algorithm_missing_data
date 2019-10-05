@@ -39,7 +39,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -85,10 +85,10 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
   nrepl=1000
   bootrepl=200
   n=1000
-  px=2
+  px=1
   a=c(-3,-1.5)
-  b=c(-0.02,0.2)
-  xsd=c(12.3, 1.8)
+  b=c(-0.02)
+  xsd=c(12.3)
 
   cl <- makeCluster(detectCores())
   registerDoParallel(cl)
@@ -105,7 +105,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -151,10 +151,10 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
   nrepl=1000
   bootrepl=200
   n=1000
-  px=2
+  px=1
   a=c(-1.8,-1.5)
-  b=c(-0.02,0.2)
-  xsd=c(123, 1.8)
+  b=c(-0.02)
+  xsd=c(123)
 
   cl <- makeCluster(detectCores())
   registerDoParallel(cl)
@@ -171,7 +171,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -240,7 +240,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -307,7 +307,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -374,7 +374,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -441,7 +441,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -507,7 +507,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -574,7 +574,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -640,7 +640,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {
@@ -708,7 +708,7 @@ library(foreach); library(doParallel); library(doRNG); library(MASS); library(he
       
       # Bootstrapped standard errors
       df_boot = cbind(data$y1, data$x)
-      prop_sigma=matrix(0,bootrepl,4)
+      prop_sigma=matrix(0,bootrepl,(px+2))
       
       for(ibot in 1:bootrepl)
       {

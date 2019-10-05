@@ -21,7 +21,7 @@ em_algo=function(y1,x,niter=100,conv=1e-6, onlyparam=FALSE) #y1=caught, x=matrix
 {
   x=as.matrix(x) #ensure matrix
   n=nrow(x)
-  them=c(-1.8,-1.5,-0.02,-0.2)
+  them=c(a,b)
   themold=0*them # Vector (0,0,0,0,0)
   iter=1 #number of iterations
   while(sum((them-themold)^2/(themold+0.0001)^2)>conv && iter<niter) #&& saves time, no eval of second expression if first breaks
@@ -48,7 +48,7 @@ em_algo=function(y1,x,niter=100,conv=1e-6, onlyparam=FALSE) #y1=caught, x=matrix
 
 # DATA GENERATING FUNCTIONS
 
-data_generation = function(n, px, a, b, xsd, xcor) {
+data_generation = function(n, px, a, b, xsd, xcor=99) {
   
   if(px==1) {
     x=matrix(rnorm(px*n),n,px)
