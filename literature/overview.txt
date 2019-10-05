@@ -1,0 +1,17 @@
+Amini, M. R., & Gallinari, P. (2003, August). Semi-supervised learning with explicit misclassification modeling. In IJCAI (Vol. 3, pp. 555-560).
+Artı́s, M., Ayuso, M., & Guillen, M. (1999). Modelling different types of automobile insurance fraud behaviour in the Spanish market. Insurance: Mathematics and Economics, 24(1-2), 67-81.
+Artís, M., Ayuso, M., & Guillén, M. (2002). Detection of automobile insurance fraud with discrete choice models and misclassified claims. Journal of Risk and Insurance, 69(3), 325-340.
+Baker, S. G. (1992). A simple method for computing the observed information matrix when using the EM algorithm with categorical data. Journal of Computational and Graphical Statistics, 1(1), 63-76.
+Basford, K. E., Greenway, D. R., McLachlan, G. J., & Peel, D. (1997). Standard errors of fitted component means of normal mixtures. Computational Statistics, 12(1), 1-18.
+Bolin, J. E., & Finch, H. (2014). Supervised classification in the presence of misclassified training data: a Monte Carlo simulation study in the three group case. Frontiers in psychology, 5, 118.
+Caudill, S. B., Ayuso, M., & Guillén, M. (2005). Fraud detection using a multinomial logit model with missing information. Journal of Risk and Insurance, 72(4), 539-550.
+Dempster, A. P., Laird, N. M., & Rubin, D. B. (1977). Maximum likelihood from incomplete data via the EM algorithm. Journal of the Royal Statistical Society: Series B (Methodological), 39(1), 1-22.
+Enders, C. K. (2010). Applied missing data analysis. Guilford press.
+Hausman, J. A., Abrevaya, J., & Scott-Morton, F. M. (1998). Misclassification of the dependent variable in a discrete-response setting. Journal of econometrics, 87(2), 239-269.
+Jamshidian, M., & Jennrich, R. I. (2000). Standard errors for EM estimation. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 62(2), 257-270.
+Louis, T. A. (1982). Finding the observed information matrix when using the EM algorithm. Journal of the Royal Statistical Society: Series B (Methodological), 44(2), 226-233.
+McLachlan, G., & Krishnan, T. (2007). The EM algorithm and extensions (Vol. 382). John Wiley & Sons.
+Ng, S. K., Krishnan, T., & McLachlan, G. J. (2012). The EM algorithm. In Handbook of computational statistics (pp. 139-172). Springer, Berlin, Heidelberg.
+Paulus, A. (2015). Tax evasion and measurement error: An econometric analysis of survey data linked with tax records (No. 2015-10). ISER Working Paper Series.
+
+Notes: 
