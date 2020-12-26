@@ -1,0 +1,342 @@
+---
+title: "EM algorithm with non-param bootstrap"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Load packages
+```{r load packages, echo=FALSE}
+library(here)
+library(tidyverse)
+library(kableExtra)
+library(haven)
+#library(stargazer)
+#library(skimr)
+#library(lubridate)
+#library(data.table)
+```
+
+
+# load data
+```{r load data, echo=FALSE}
+
+config1 = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_one_var_base.rds") ) ) )
+config2  = as_tibble(as_data_frame(readRDS(here("simulation_results", "v2_one_var_a_up.rds") ) ) )
+config3  = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_one_var_xsd_up.rds") ) ) )
+config4  = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_two_var_base.rds") ) ) )
+config5  = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_two_var_05corr.rds") ) ) )
+config6  = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_two_var_09corr.rds") ) ) ) 
+config7  = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_two_var_sdx1_up.rds") ) ) )
+config8  = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_two_var_sdx_up.rds") ) ) )
+config9  = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_two_var_sdx_and_cor_up.rds") ) ) )
+config10 = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_two_var_base_new_seed.rds") ) ) )
+config11 = as_tibble(as.data.frame(readRDS(here("simulation_results", "v2_two_var_1000_bootrepl.rds") ) ) )
+
+
+```
+
+
+# Tables with time and configurations
+```{r param config table, echo=FALSE}
+# Load time
+time1  = readRDS(here("simulation_results", "v2_one_var_base_time.rds"))
+time2  = readRDS(here("simulation_results", "v2_one_var_a_up_time.rds"))
+time3  = readRDS(here("simulation_results", "v2_one_var_xsd_up_time.rds"))
+time4  = readRDS(here("simulation_results", "v2_two_var_base_time.rds"))
+time5  = readRDS(here("simulation_results", "v2_two_var_05corr_time.rds"))
+time6  = readRDS(here("simulation_results", "v2_two_var_09corr_time.rds"))
+time7  = readRDS(here("simulation_results", "v2_two_var_sdx1_up_time.rds"))
+time8  = readRDS(here("simulation_results", "v2_two_var_sdx_up_time.rds"))
+time9  = readRDS(here("simulation_results", "v2_two_var_sdx_and_cor_up_time.rds"))
+time10 = readRDS(here("simulation_results", "v2_two_var_base_new_seed_time.rds"))
+time11 = readRDS(here("simulation_results", "v2_two_var_1000_bootrepl_time.rds"))
+
+# Check unit of time
+time1; time2; time3; time4; time5; time6; time7; time8; time9; time10; time11
+
+# Create table of parameter configurations
+c1 = c(-1.8, -1.5, -0.02, NA, 12.3, NA, 0, 1000, 200, 3108, 1000, time1 )
+c2 = c(-3.0, -1.5, -0.02, NA, 12.3, NA, 0, 1000, 200, 3108, 1000, time2 )
+c3 = c(-1.8, -1.5, -0.02, NA, 123, NA, 0, 1000, 200, 3108, 1000, time3 )
+c4 = c(-1.8, -1.5, -0.02, 0.2, 12.3, 1.8, 0, 1000, 200, 3108, 1000, time4 )
+c5 = c(-1.8, -1.5, -0.02, 0.2, 12.3, 1.8, 0.5, 1000, 200, 3108, 1000, time5 )
+c6 = c(-1.8, -1.5, -0.02, 0.2, 12.3, 1.8, 0.9, 1000, 200, 3108, 1000, time6 )
+c7 = c(-1.8, -1.5, -0.02, 0.2, 123, 1.8, 0, 1000, 200, 3108, 1000, time7 )
+c8 = c(-1.8, -1.5, -0.02, 0.2, 123, 18, 0, 1000, 200, 3108, 1000, time8 )
+c9 = c(-1.8, -1.5, -0.02, 0.2, 123, 18, 0.9, 1000, 200, 3108, 1000, time9 )
+c10 = c(-1.8, -1.5, -0.02, 0.2, 12.3, 1.8, 0, 1000, 200, 1703, 1000, time10 )
+c11 = c(-1.8, -1.5, -0.02, 0.2, 12.3, 1.8, 0, 1000, 1000, 3108, 1000, (time11*24) )
+
+param_configurations = rbind(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11)
+colnames(param_configurations) = c("a1", "a2", "b1", "b2", "sd(x1)", "sd(x2)", "xcor", "nrepl", "bootrepl","seed", "n", "hours")
+param_configurations = as_tibble(param_configurations)
+param_configurations = param_configurations %>% mutate( config = c("c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "c11"))
+rm(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11)
+rm(time1, time2, time3, time4, time5, time6, time7, time8, time9, time10, time11)
+
+param_configurations %>%
+  kable(digits = 2) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "One variable", 1, 3) %>%
+  pack_rows(., "Two variables", 4, 11)
+
+
+```
+
+
+
+
+# Sum missing data across all 11 parameter configurations
+```{r sum missing data}
+binded_data <- cbind(config1, config2, config3, config4, config5, config6, config7, config8, config9, config10, config11)
+sum(apply(binded_data, 2, function(x) sum(is.na(x))))
+rm(binded_data)
+```
+
+
+# Full results from parameter configurations
+
+### Configuration 1
+```{r config1}
+param_configurations %>% slice(1:1) %>% kable() %>% kable_styling("striped") 
+
+config1 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 6) %>%
+  pack_rows(., "Perfect information Trinomial logit", 7, 12) %>%
+  pack_rows(., "Binomial logit", 13, 16) %>%
+  pack_rows(., "Descriptives", 17, 20)
+```        
+
+### Configuration 2
+```{r}
+param_configurations %>% slice(2:2) %>% kable() %>% kable_styling("striped") 
+
+config2 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 6) %>%
+  pack_rows(., "Perfect information Trinomial logit", 7, 12) %>%
+  pack_rows(., "Binomial logit", 13, 16) %>%
+  pack_rows(., "Descriptives", 17, 20)
+``` 
+    
+### Configuration 3
+```{r}
+param_configurations %>% slice(3:3) %>% kable() %>% kable_styling("striped") 
+
+config3 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 6) %>%
+  pack_rows(., "Perfect information Trinomial logit", 7, 12) %>%
+  pack_rows(., "Binomial logit", 13, 16) %>%
+  pack_rows(., "Descriptives", 17, 20)
+``` 
+    
+### Configuration 4
+```{r}
+param_configurations %>% slice(4:4) %>% kable() %>% kable_styling("striped") 
+
+config4 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 8) %>%
+  pack_rows(., "Perfect information Trinomial logit", 9, 16) %>%
+  pack_rows(., "Binomial logit", 17, 22) %>%
+  pack_rows(., "Descriptives", 23, 26)
+``` 
+
+### Configuration 5
+```{r}
+param_configurations %>% slice(5:5) %>% kable() %>% kable_styling("striped") 
+
+config5 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 8) %>%
+  pack_rows(., "Perfect information Trinomial logit", 9, 16) %>%
+  pack_rows(., "Binomial logit", 17, 22) %>%
+  pack_rows(., "Descriptives", 23, 26)
+``` 
+
+
+### Configuration 6
+```{r}
+param_configurations %>% slice(6:6) %>% kable() %>% kable_styling("striped") 
+
+config6 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 8) %>%
+  pack_rows(., "Perfect information Trinomial logit", 9, 16) %>%
+  pack_rows(., "Binomial logit", 17, 22) %>%
+  pack_rows(., "Descriptives", 23, 26)
+``` 
+
+### Configuration 7
+```{r}
+param_configurations %>% slice(7:7) %>% kable() %>% kable_styling("striped") 
+
+config7 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 8) %>%
+  pack_rows(., "Perfect information Trinomial logit", 9, 16) %>%
+  pack_rows(., "Binomial logit", 17, 22) %>%
+  pack_rows(., "Descriptives", 23, 26)
+``` 
+
+### Configuration 8
+```{r}
+param_configurations %>% slice(8:8) %>% kable() %>% kable_styling("striped") 
+
+config8 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 8) %>%
+  pack_rows(., "Perfect information Trinomial logit", 9, 16) %>%
+  pack_rows(., "Binomial logit", 17, 22) %>%
+  pack_rows(., "Descriptives", 23, 26)
+``` 
+
+### Configuration 9
+```{r}
+param_configurations %>% slice(9:9) %>% kable() %>% kable_styling("striped") 
+
+config9 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 8) %>%
+  pack_rows(., "Perfect information Trinomial logit", 9, 16) %>%
+  pack_rows(., "Binomial logit", 17, 22) %>%
+  pack_rows(., "Descriptives", 23, 26)
+``` 
+
+### Configuration 10
+```{r}
+param_configurations %>% slice(10:10) %>% kable() %>% kable_styling("striped") 
+
+config10 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 8) %>%
+  pack_rows(., "Perfect information Trinomial logit", 9, 16) %>%
+  pack_rows(., "Binomial logit", 17, 22) %>%
+  pack_rows(., "Descriptives", 23, 26)
+``` 
+
+### Configuration 11
+```{r}
+param_configurations %>% slice(11:11) %>% kable() %>% kable_styling("striped") 
+
+config11 %>%
+  gather(key="variable",value=value, factor_key = TRUE) %>% 
+  group_by(variable) %>% 
+  summarise(mean=mean(value),
+            sd=sd(value),
+            min=min(value),
+            max=max(value) ) %>% 
+  ungroup() %>%
+  kable(digits = 3) %>%
+  #kable(., "latex") %>% #Needed for latex + define as object (first line)
+  kable_styling("striped") %>%
+  pack_rows(., "EM-algorithm", 1, 8) %>%
+  pack_rows(., "Perfect information Trinomial logit", 9, 16) %>%
+  pack_rows(., "Binomial logit", 17, 22) %>%
+  pack_rows(., "Descriptives", 23, 26)
+``` 
+
+
+
+
+
+
+
