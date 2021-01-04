@@ -2,7 +2,7 @@
 
 Following Caudill, Ayuso and Guillén (2005) we conduct an investigation of the performance of the EM-algorithm for missing data, by the means of a Monte Carlo Simulation study. The example we have in mind, is imperfect detection rates in audits, and its consequences and the ability of the EM-algorithm to address this. 
 
-Our discussion paper is available from: https://www.nhh.no/en/research-centres/nocet/research/discussion-papers/
+Our discussion paper is available from: https://hdl.handle.net/11250/2721233
 
 param_config_table.xlsx shows the 11 configurations we present here. 
 
